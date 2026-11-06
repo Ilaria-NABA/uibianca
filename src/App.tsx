@@ -302,24 +302,29 @@ export default function App() {
           gridType={gridStyle}
           scale={scale}
           showRulers={true}
+          currentPage={currentPage}
         >
           {/* Alignment Center Guides (Togglable) */}
           {showGuides && (
             <div className="absolute inset-0 pointer-events-none z-15 flex items-center justify-center">
               {/* Horizontal center dashed line */}
-              <div className="absolute w-full h-[1px] border-t border-dashed border-zinc-400" />
+              <div className={`absolute w-full h-[1px] border-t border-dashed ${currentPage === 1 ? 'border-white/50' : 'border-zinc-400'}`} />
               {/* Vertical center dashed line */}
-              <div className="absolute h-full w-[1px] border-l border-dashed border-zinc-400" />
+              <div className={`absolute h-full w-[1px] border-l border-dashed ${currentPage === 1 ? 'border-white/50' : 'border-zinc-400'}`} />
               {/* Center point marker */}
-              <div className="w-4 h-4 rounded-full border border-zinc-500 flex items-center justify-center">
-                <div className="w-1 h-1 bg-zinc-800 rounded-full" />
+              <div className={`w-4 h-4 rounded-full border ${currentPage === 1 ? 'border-white text-white' : 'border-zinc-500'} flex items-center justify-center`}>
+                <div className={`w-1 h-1 rounded-full ${currentPage === 1 ? 'bg-white' : 'bg-zinc-800'}`} />
               </div>
             </div>
           )}
 
           {/* Page Indicator Tag inside mobile screen (Subtle wireframe watermark) */}
-          <div className="absolute top-2 left-6 text-[10px] font-mono text-zinc-400 uppercase tracking-widest z-15 select-none">
-            {currentPage === 1 ? 'PAGINA 1 / 2' : 'PAGINA 2 / 2'}
+          <div
+            className={`absolute top-3 left-6 text-[10px] font-mono uppercase tracking-widest z-15 select-none transition-colors duration-200 ${
+              currentPage === 1 ? 'text-white/80' : 'text-zinc-400'
+            }`}
+          >
+            {currentPage === 1 ? 'PAGINA 1 / 2 (ROSSO)' : 'PAGINA 2 / 2'}
           </div>
 
           {/* Animated Page Transitions */}
@@ -327,7 +332,7 @@ export default function App() {
             <AnimatePresence initial={false} custom={direction} mode="wait">
               {currentPage === 1 ? (
                 /* ================= PAGINA 1 ================= */
-                /* "Pagina 1: con dentro solo un bottone con scritto 'avanti'" */
+                /* "Pagina 1: con background rosso e dentro solo un bottone con scritto 'avanti'" */
                 <motion.div
                   key="page-1"
                   custom={direction}
@@ -339,7 +344,7 @@ export default function App() {
                     x: { type: 'spring', stiffness: 320, damping: 32 },
                     opacity: { duration: 0.15 },
                   }}
-                  className="absolute inset-0 flex flex-col items-center justify-center"
+                  className="absolute inset-0 bg-red-600 flex flex-col items-center justify-center"
                 >
                   <button
                     onClick={handleNext}
@@ -366,7 +371,7 @@ export default function App() {
                     x: { type: 'spring', stiffness: 320, damping: 32 },
                     opacity: { duration: 0.15 },
                   }}
-                  className="absolute inset-0 flex flex-col items-center justify-center"
+                  className="absolute inset-0 bg-white flex flex-col items-center justify-center"
                 >
                   <button
                     onClick={handleBack}

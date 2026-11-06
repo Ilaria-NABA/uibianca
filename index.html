@@ -1,21 +1,407 @@
 <!doctype html>
-<html lang="en">
+<html lang="it">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Wireframe Mobile App - iPhone 11</title>
-    <meta name="description" content="Applicazione mobile wireframe a due pagine in bianco e nero in formato iPhone 11 con navigazione avanti e indietro." />
-    <meta property="og:title" content="Wireframe Mobile App - iPhone 11" />
-    <meta property="og:description" content="Applicazione mobile wireframe a due pagine in bianco e nero in formato iPhone 11 con navigazione avanti e indietro." />
-    <meta property="og:type" content="website" />
-    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="description" content="Applicazione mobile wireframe a due pagine in formato iPhone 11 con navigazione avanti e indietro." />
+    
+    <!-- Google Fonts per stile Wireframe e Tecnico -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600&family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Tailwind CSS CDN (Nessun bundler o compilazione necessaria per GitHub Pages) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"Plus Jakarta Sans"', 'system-ui', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'monospace'],
+            }
+          }
+        }
+      }
+    </script>
+
+    <style>
+      body {
+        background-color: #ededed;
+        color: #111111;
+        font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+        user-select: none;
+        -webkit-font-smoothing: antialiased;
+      }
+
+      /* Griglie Wireframe */
+      .wireframe-dot-grid {
+        background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+        background-size: 20px 20px;
+      }
+
+      .wireframe-blueprint-grid {
+        background-image: 
+          linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+        background-size: 24px 24px;
+      }
+
+      .wireframe-dense-grid {
+        background-image: 
+          linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+          linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+        background-size: 14px 14px;
+      }
+
+      /* Ombra Wireframe / Neo-brutalist */
+      .wireframe-shadow {
+        box-shadow: 4px 4px 0px 0px #000000;
+      }
+
+      .wireframe-shadow-sm {
+        box-shadow: 2px 2px 0px 0px #000000;
+      }
+
+      /* Transizioni di scorrimento tra le pagine */
+      .screen-slide {
+        transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
+      }
+
+      .slide-center {
+        transform: translateX(0%);
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .slide-left {
+        transform: translateX(-100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .slide-right {
+        transform: translateX(100%);
+        opacity: 0;
+        pointer-events: none;
+      }
+    </style>
   </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
+  <body class="min-h-screen bg-[#ededed] text-black flex flex-col justify-between overflow-x-hidden">
+
+    <!-- BARRA STRUMENTI SUPERIORE (Prototipo Wireframe) -->
+    <header class="w-full bg-white border-b-2 border-black px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 shadow-[0_2px_0_0_#000000] z-50">
+      <div class="flex items-center gap-3">
+        <!-- Badge iPhone 11 -->
+        <div class="flex items-center gap-2 border-2 border-black px-2.5 py-1 bg-black text-white rounded-xs">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect width="14" height="20" x="5" y="2" rx="2" ry="2"/>
+            <path d="M12 18h.01"/>
+          </svg>
+          <span class="font-mono text-xs font-bold tracking-wider uppercase">iPhone 11 Wireframe</span>
+        </div>
+
+        <!-- Selettore rapido Pagina 1 / Pagina 2 -->
+        <div class="flex items-center border-2 border-black bg-white rounded-xs overflow-hidden text-xs font-mono">
+          <button id="nav-tab-1" class="px-3 py-1 bg-black text-white font-bold cursor-pointer transition-colors">
+            Pagina 1 (Rosso)
+          </button>
+          <div class="w-[1.5px] h-full bg-black self-stretch"></div>
+          <button id="nav-tab-2" class="px-3 py-1 text-zinc-600 hover:bg-zinc-100 cursor-pointer transition-colors">
+            Pagina 2 (Bianco)
+          </button>
+        </div>
+      </div>
+
+      <!-- Controlli del simulatore -->
+      <div class="flex items-center flex-wrap gap-2 text-xs">
+        <!-- Zoom / Adatta -->
+        <div class="flex items-center border-2 border-black bg-white rounded-xs overflow-hidden font-mono text-xs">
+          <button id="btn-zoom-out" class="px-2 py-1 hover:bg-zinc-100 cursor-pointer border-r border-black" title="Riduci">-</button>
+          <span id="zoom-label" class="px-2 py-1 min-w-[50px] text-center font-bold">85%</span>
+          <button id="btn-zoom-in" class="px-2 py-1 hover:bg-zinc-100 cursor-pointer border-l border-black" title="Ingrandisci">+</button>
+          <button id="btn-zoom-fit" class="px-2 py-1 bg-black text-white cursor-pointer border-l border-black" title="Adatta allo schermo">Fit</button>
+        </div>
+
+        <!-- Reset a Pagina 1 -->
+        <button id="btn-reset" class="border-2 border-black bg-white px-2.5 py-1 rounded-xs flex items-center gap-1 font-mono hover:bg-zinc-100 active:translate-y-0.5 cursor-pointer">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+            <path d="M3 3v5h5"/>
+          </svg>
+          <span>Reset</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- AREA DI LAVORO CENTRALE (DRAFTING DESK) -->
+    <main class="flex-1 w-full flex items-center justify-center p-4 sm:p-6 lg:p-8 overflow-hidden relative">
+      <!-- Sfondo quadrettato da tavolo da disegno -->
+      <div class="absolute inset-0 pointer-events-none wireframe-dense-grid opacity-60"></div>
+
+      <!-- CONTENITORE FORMATO IPHONE 11 -->
+      <div id="phone-scaler" class="relative inline-flex flex-col items-center justify-center select-none transition-transform duration-200 ease-out" style="transform: scale(0.85); transform-origin: top center;">
+        
+        <!-- Callout quota larghezza (414 pt) -->
+        <div class="hidden md:flex items-center justify-center gap-2 mb-3 text-xs font-mono text-zinc-500">
+          <span class="w-8 h-[1px] bg-zinc-400"></span>
+          <span class="px-1.5 py-0.5 border border-zinc-400 bg-white rounded-xs">L: 414 pt (iPhone 11)</span>
+          <span class="w-8 h-[1px] bg-zinc-400"></span>
+        </div>
+
+        <!-- Telaio Esterno iPhone 11 -->
+        <div class="relative w-[438px] h-[920px] bg-white border-[3px] border-black rounded-[54px] shadow-[12px_12px_0px_0px_#000000] p-[10px] flex flex-col items-center justify-center">
+          
+          <!-- Pulsanti Hardware Fisici sui bordi (Stile Wireframe) -->
+          <div class="absolute -left-[9px] top-[140px] w-[6px] h-[32px] bg-white border-2 border-black rounded-l-md" title="Mute"></div>
+          <div class="absolute -left-[9px] top-[195px] w-[6px] h-[58px] bg-white border-2 border-black rounded-l-md" title="Volume +"></div>
+          <div class="absolute -left-[9px] top-[268px] w-[6px] h-[58px] bg-white border-2 border-black rounded-l-md" title="Volume -"></div>
+          <div class="absolute -right-[9px] top-[210px] w-[6px] h-[78px] bg-white border-2 border-black rounded-r-md" title="Power"></div>
+
+          <!-- Tacche antenna -->
+          <div class="absolute top-[85px] left-0 w-[4px] h-[4px] bg-black"></div>
+          <div class="absolute top-[85px] right-0 w-[4px] h-[4px] bg-black"></div>
+          <div class="absolute bottom-[85px] left-0 w-[4px] h-[4px] bg-black"></div>
+          <div class="absolute bottom-[85px] right-0 w-[4px] h-[4px] bg-black"></div>
+
+          <!-- SCHERMO ATTIVO (414 x 896 pt standard iPhone 11) -->
+          <div id="screen-viewport" class="relative w-[414px] h-[896px] bg-white border-2 border-black rounded-[44px] overflow-hidden flex flex-col">
+            
+            <!-- NOTCH CLASSICO IPHONE 11 -->
+            <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[190px] h-[30px] bg-white border-b-2 border-x-2 border-black rounded-b-[20px] z-30 flex items-center justify-center shadow-[0px_2px_0px_#000000] pointer-events-none">
+              <!-- Griglia capsula auricolare -->
+              <div class="w-[48px] h-[5px] border border-black bg-zinc-200 rounded-full"></div>
+              <!-- Obiettivo fotocamera frontale -->
+              <div class="absolute right-5 w-[10px] h-[10px] border border-black bg-white rounded-full flex items-center justify-center">
+                <div class="w-[3px] h-[3px] bg-black rounded-full"></div>
+              </div>
+            </div>
+
+            <!-- STATUS BAR iOS (Sovrapposta in alto, adattiva al background) -->
+            <div id="status-bar" class="absolute top-0 left-0 right-0 w-full h-[44px] px-8 flex items-center justify-between text-xs font-semibold select-none z-20 pointer-events-none text-white transition-colors duration-200">
+              <div class="font-mono text-xs tracking-tight pl-1 font-bold">9:41</div>
+              <div class="flex items-center gap-2 pr-1">
+                <!-- Segnale -->
+                <svg class="w-4 h-4 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M2 20h.01M7 20v-4m5 4v-8m5 4v-12"/>
+                </svg>
+                <!-- Wi-Fi -->
+                <svg class="w-3.5 h-3.5 stroke-[2.2]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 20h.01M8.5 16.5a5 5 0 0 1 7 0M5 13a10 10 0 0 1 14 0M1.5 9.5a15 15 0 0 1 21 0"/>
+                </svg>
+                <!-- Batteria -->
+                <div class="flex items-center gap-0.5">
+                  <div id="battery-border" class="w-[22px] h-[11px] border-[1.5px] border-white rounded-xs p-[1px] flex items-center">
+                    <div id="battery-fill" class="w-full h-full bg-white rounded-[1px]"></div>
+                  </div>
+                  <div id="battery-tip" class="w-[1.5px] h-[4px] bg-white rounded-r-xs"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- WATERMARK INDICATORE PAGINA ATTIVA -->
+            <div id="page-watermark" class="absolute top-3 left-6 text-[10px] font-mono uppercase tracking-widest z-15 select-none text-white/80 transition-colors duration-200">
+              PAGINA 1 / 2 (ROSSO)
+            </div>
+
+            <!-- CONTENITORE PAGINE APPLICATIVE -->
+            <div class="relative w-full h-full overflow-hidden">
+              
+              <!-- ========================================== -->
+              <!-- PAGINA 1: Background rosso + Solo bottone "avanti" -->
+              <!-- ========================================== -->
+              <div id="page-1" class="screen-slide slide-center absolute inset-0 bg-red-600 flex flex-col items-center justify-center">
+                <button
+                  id="btn-avanti"
+                  class="cursor-pointer transition-all duration-150 font-medium tracking-wide focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 select-none px-9 py-4 bg-white text-black text-lg font-bold border-[2.5px] border-black wireframe-shadow active:translate-x-1 active:translate-y-1 active:shadow-none hover:bg-zinc-50 rounded-xs flex items-center gap-2"
+                  aria-label="Avanti"
+                >
+                  <span>avanti</span>
+                  <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3"/>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- ========================================== -->
+              <!-- PAGINA 2: Schermata vuota + Solo bottone "indietro" -->
+              <!-- ========================================== -->
+              <div id="page-2" class="screen-slide slide-right absolute inset-0 bg-white flex flex-col items-center justify-center">
+                <button
+                  id="btn-indietro"
+                  class="cursor-pointer transition-all duration-150 font-medium tracking-wide focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 select-none px-9 py-4 bg-white text-black text-lg font-bold border-[2.5px] border-black wireframe-shadow active:translate-x-1 active:translate-y-1 active:shadow-none hover:bg-zinc-50 rounded-xs flex items-center gap-2"
+                  aria-label="Indietro"
+                >
+                  <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18"/>
+                  </svg>
+                  <span>indietro</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- HOME INDICATOR INFERIORE (Stile iPhone) -->
+            <div class="absolute bottom-0 left-0 right-0 w-full h-[34px] flex items-center justify-center pointer-events-none z-20 pb-2">
+              <div id="home-indicator" class="w-[136px] h-[5px] rounded-full transition-colors duration-200 border bg-white border-white/60 shadow-[0_1px_2px_rgba(0,0,0,0.3)]"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- FOOTER INFORMATIVO -->
+    <footer class="w-full bg-white border-t-2 border-black px-4 py-2 flex flex-wrap items-center justify-between text-xs font-mono text-zinc-700 select-none z-30">
+      <div class="flex items-center gap-3">
+        <span class="font-bold text-black">FORMATO: iPhone 11</span>
+        <span class="text-zinc-400">|</span>
+        <span>Viewport: 414 × 896 pt</span>
+        <span class="hidden sm:inline text-zinc-400">|</span>
+        <span class="hidden sm:inline">Unico File HTML statico (Zero dipendenze)</span>
+      </div>
+      <div class="flex items-center gap-3 text-zinc-600">
+        <span id="footer-status">Stato: Pagina 1 (avanti)</span>
+      </div>
+    </footer>
+
+    <!-- JAVASCRIPT VANILLA NATURA PER GESTIONE STATO E NAVIGAZIONE -->
+    <script>
+      (function() {
+        // Elementi DOM
+        const page1 = document.getElementById('page-1');
+        const page2 = document.getElementById('page-2');
+        const btnAvanti = document.getElementById('btn-avanti');
+        const btnIndietro = document.getElementById('btn-indietro');
+        const navTab1 = document.getElementById('nav-tab-1');
+        const navTab2 = document.getElementById('nav-tab-2');
+        const statusBar = document.getElementById('status-bar');
+        const batteryBorder = document.getElementById('battery-border');
+        const batteryFill = document.getElementById('battery-fill');
+        const batteryTip = document.getElementById('battery-tip');
+        const pageWatermark = document.getElementById('page-watermark');
+        const homeIndicator = document.getElementById('home-indicator');
+        const footerStatus = document.getElementById('footer-status');
+        const phoneScaler = document.getElementById('phone-scaler');
+        const zoomLabel = document.getElementById('zoom-label');
+        const btnZoomIn = document.getElementById('btn-zoom-in');
+        const btnZoomOut = document.getElementById('btn-zoom-out');
+        const btnZoomFit = document.getElementById('btn-zoom-fit');
+        const btnReset = document.getElementById('btn-reset');
+
+        let currentPage = 1;
+        let scale = 0.85;
+        let autoScale = true;
+
+        // Funzione per aggiornare la visualizzazione della pagina
+        function goToPage(targetPage) {
+          if (targetPage === currentPage) return;
+          currentPage = targetPage;
+
+          if (currentPage === 1) {
+            // Pagina 1 attiva (Rosso)
+            page1.className = 'screen-slide slide-center absolute inset-0 bg-red-600 flex flex-col items-center justify-center';
+            page2.className = 'screen-slide slide-right absolute inset-0 bg-white flex flex-col items-center justify-center';
+
+            // Navbar tab
+            navTab1.className = 'px-3 py-1 bg-black text-white font-bold cursor-pointer transition-colors';
+            navTab2.className = 'px-3 py-1 text-zinc-600 hover:bg-zinc-100 cursor-pointer transition-colors';
+
+            // Status bar bianca per contrasto su sfondo rosso
+            statusBar.className = 'absolute top-0 left-0 right-0 w-full h-[44px] px-8 flex items-center justify-between text-xs font-semibold select-none z-20 pointer-events-none text-white transition-colors duration-200';
+            batteryBorder.className = 'w-[22px] h-[11px] border-[1.5px] border-white rounded-xs p-[1px] flex items-center';
+            batteryFill.className = 'w-full h-full bg-white rounded-[1px]';
+            batteryTip.className = 'w-[1.5px] h-[4px] bg-white rounded-r-xs';
+
+            // Watermark e Home Indicator
+            pageWatermark.textContent = 'PAGINA 1 / 2 (ROSSO)';
+            pageWatermark.className = 'absolute top-3 left-6 text-[10px] font-mono uppercase tracking-widest z-15 select-none text-white/80 transition-colors duration-200';
+            homeIndicator.className = 'w-[136px] h-[5px] rounded-full transition-colors duration-200 border bg-white border-white/60 shadow-[0_1px_2px_rgba(0,0,0,0.3)]';
+
+            footerStatus.textContent = 'Stato: Pagina 1 (avanti)';
+          } else {
+            // Pagina 2 attiva (Bianco)
+            page1.className = 'screen-slide slide-left absolute inset-0 bg-red-600 flex flex-col items-center justify-center';
+            page2.className = 'screen-slide slide-center absolute inset-0 bg-white flex flex-col items-center justify-center';
+
+            // Navbar tab
+            navTab1.className = 'px-3 py-1 text-zinc-600 hover:bg-zinc-100 cursor-pointer transition-colors';
+            navTab2.className = 'px-3 py-1 bg-black text-white font-bold cursor-pointer transition-colors';
+
+            // Status bar nera su sfondo bianco
+            statusBar.className = 'absolute top-0 left-0 right-0 w-full h-[44px] px-8 flex items-center justify-between text-xs font-semibold select-none z-20 pointer-events-none text-black transition-colors duration-200';
+            batteryBorder.className = 'w-[22px] h-[11px] border-[1.5px] border-black rounded-xs p-[1px] flex items-center';
+            batteryFill.className = 'w-full h-full bg-black rounded-[1px]';
+            batteryTip.className = 'w-[1.5px] h-[4px] bg-black rounded-r-xs';
+
+            // Watermark e Home Indicator
+            pageWatermark.textContent = 'PAGINA 2 / 2 (BIANCO)';
+            pageWatermark.className = 'absolute top-3 left-6 text-[10px] font-mono uppercase tracking-widest z-15 select-none text-zinc-400 transition-colors duration-200';
+            homeIndicator.className = 'w-[136px] h-[5px] rounded-full transition-colors duration-200 border bg-black border-black';
+
+            footerStatus.textContent = 'Stato: Pagina 2 (indietro)';
+          }
+        }
+
+        // Collegamento pulsanti "avanti" e "indietro"
+        btnAvanti.addEventListener('click', function() {
+          goToPage(2);
+        });
+
+        btnIndietro.addEventListener('click', function() {
+          goToPage(1);
+        });
+
+        // Controlli tabs e reset
+        navTab1.addEventListener('click', function() {
+          goToPage(1);
+        });
+
+        navTab2.addEventListener('click', function() {
+          goToPage(2);
+        });
+
+        btnReset.addEventListener('click', function() {
+          goToPage(1);
+        });
+
+        // Gestione zoom e adattamento automatico alla finestra
+        function updateScale(newScale) {
+          scale = Math.min(1.15, Math.max(0.45, Math.round(newScale * 100) / 100));
+          phoneScaler.style.transform = 'scale(' + scale + ')';
+          zoomLabel.textContent = Math.round(scale * 100) + '%';
+        }
+
+        function calculateFitScale() {
+          if (!autoScale) return;
+          const availableHeight = window.innerHeight - 120;
+          const phoneHeight = 940;
+          const calculated = Math.min(1.0, Math.max(0.48, availableHeight / phoneHeight));
+          updateScale(calculated);
+        }
+
+        btnZoomIn.addEventListener('click', function() {
+          autoScale = false;
+          btnZoomFit.className = 'px-2 py-1 hover:bg-zinc-100 cursor-pointer border-l border-black';
+          updateScale(scale + 0.1);
+        });
+
+        btnZoomOut.addEventListener('click', function() {
+          autoScale = false;
+          btnZoomFit.className = 'px-2 py-1 hover:bg-zinc-100 cursor-pointer border-l border-black';
+          updateScale(scale - 0.1);
+        });
+
+        btnZoomFit.addEventListener('click', function() {
+          autoScale = true;
+          btnZoomFit.className = 'px-2 py-1 bg-black text-white cursor-pointer border-l border-black';
+          calculateFitScale();
+        });
+
+        window.addEventListener('resize', calculateFitScale);
+        calculateFitScale();
+      })();
+    </script>
   </body>
 </html>
-

@@ -7,6 +7,7 @@ interface IPhone11FrameProps {
   gridType?: 'blueprint' | 'dots' | 'none';
   scale?: number;
   showRulers?: boolean;
+  currentPage?: 1 | 2;
 }
 
 export const IPhone11Frame: React.FC<IPhone11FrameProps> = ({
@@ -15,7 +16,10 @@ export const IPhone11Frame: React.FC<IPhone11FrameProps> = ({
   gridType = 'blueprint',
   scale = 1,
   showRulers = true,
+  currentPage = 1,
 }) => {
+  const isPage1 = currentPage === 1;
+
   return (
     <div className="relative inline-flex flex-col items-center justify-center select-none">
       {/* Dimension callouts (Architectural wireframe annotation) */}
@@ -74,16 +78,16 @@ export const IPhone11Frame: React.FC<IPhone11FrameProps> = ({
             {/* Optional Wireframe Grid Background inside Screen */}
             {showGrid && gridType !== 'none' && (
               <div
-                className={`absolute inset-0 pointer-events-none z-0 ${
+                className={`absolute inset-0 pointer-events-none z-1 ${
                   gridType === 'blueprint'
                     ? 'wireframe-blueprint-grid'
                     : 'wireframe-dot-grid'
-                }`}
+                } opacity-30`}
               />
             )}
 
             {/* Wireframe Notch (Classic iPhone 11 Shape) */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[190px] h-[30px] bg-white border-b-2 border-x-2 border-black rounded-b-[20px] z-30 flex items-center justify-center shadow-[0px_2px_0px_#000000]">
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[190px] h-[30px] bg-white border-b-2 border-x-2 border-black rounded-b-[20px] z-30 flex items-center justify-center shadow-[0px_2px_0px_#000000] pointer-events-none">
               {/* Speaker Earpiece Slit */}
               <div className="w-[48px] h-[5px] border border-black bg-zinc-200 rounded-full" />
               {/* Camera Lens Circle */}
@@ -92,32 +96,54 @@ export const IPhone11Frame: React.FC<IPhone11FrameProps> = ({
               </div>
             </div>
 
-            {/* iOS Status Bar (Wireframe style) */}
-            <header className="relative w-full h-[44px] px-8 flex items-center justify-between text-black text-xs font-semibold select-none z-20">
+            {/* iOS Status Bar (Overlays top) */}
+            <header
+              className={`absolute top-0 left-0 right-0 w-full h-[44px] px-8 flex items-center justify-between text-xs font-semibold select-none z-20 pointer-events-none transition-colors duration-200 ${
+                isPage1 ? 'text-white' : 'text-black'
+              }`}
+            >
               {/* Time */}
-              <div className="font-mono text-xs tracking-tight pl-1">9:41</div>
+              <div className="font-mono text-xs tracking-tight pl-1 font-bold">9:41</div>
 
               {/* Status Icons */}
               <div className="flex items-center gap-2 pr-1">
                 <SignalMedium className="w-4 h-4 stroke-[2.2]" />
                 <Wifi className="w-3.5 h-3.5 stroke-[2.2]" />
                 <div className="flex items-center gap-0.5">
-                  <div className="w-[22px] h-[11px] border-[1.5px] border-black rounded-xs p-[1px] flex items-center">
-                    <div className="w-full h-full bg-black rounded-[1px]" />
+                  <div
+                    className={`w-[22px] h-[11px] border-[1.5px] rounded-xs p-[1px] flex items-center ${
+                      isPage1 ? 'border-white' : 'border-black'
+                    }`}
+                  >
+                    <div
+                      className={`w-full h-full rounded-[1px] ${
+                        isPage1 ? 'bg-white' : 'bg-black'
+                      }`}
+                    />
                   </div>
-                  <div className="w-[1.5px] h-[4px] bg-black rounded-r-xs" />
+                  <div
+                    className={`w-[1.5px] h-[4px] rounded-r-xs ${
+                      isPage1 ? 'bg-white' : 'bg-black'
+                    }`}
+                  />
                 </div>
               </div>
             </header>
 
-            {/* Main Application Content Container */}
-            <main className="relative flex-1 w-full overflow-hidden z-10 flex flex-col">
+            {/* Main Application Content Container (Full-height for complete page backgrounds) */}
+            <main className="relative flex-1 w-full h-full overflow-hidden z-10 flex flex-col">
               {children}
             </main>
 
             {/* Home Indicator Bar (Wireframe iPhone standard) */}
-            <footer className="relative w-full h-[34px] flex items-center justify-center pointer-events-none z-20 pb-2">
-              <div className="w-[136px] h-[5px] bg-black border border-black rounded-full" />
+            <footer className="absolute bottom-0 left-0 right-0 w-full h-[34px] flex items-center justify-center pointer-events-none z-20 pb-2">
+              <div
+                className={`w-[136px] h-[5px] rounded-full transition-colors duration-200 border ${
+                  isPage1
+                    ? 'bg-white border-white/60 shadow-[0_1px_2px_rgba(0,0,0,0.3)]'
+                    : 'bg-black border-black'
+                }`}
+              />
             </footer>
           </div>
         </div>
