@@ -1,0 +1,6 @@
+{
+  "name": "Wireframe Mobile App - iPhone 11",
+  "description": "Applicazione mobile wireframe a due pagine in bianco e nero in formato iPhone 11 con navigazione avanti e indietro.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

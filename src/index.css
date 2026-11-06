@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    background-color: #f4f4f4;
+    color: #111111;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    user-select: none;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Wireframe grid patterns */
+.wireframe-dot-grid {
+  background-image: radial-gradient(#d1d5db 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.wireframe-blueprint-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+.wireframe-dense-grid {
+  background-image: 
+    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+  background-size: 12px 12px;
+}
+
+/* Classic wireframe hard shadow */
+.wireframe-shadow {
+  box-shadow: 4px 4px 0px 0px #000000;
+}
+
+.wireframe-shadow-sm {
+  box-shadow: 2px 2px 0px 0px #000000;
+}
+
+.wireframe-shadow-lg {
+  box-shadow: 8px 8px 0px 0px #000000;
+}
+
+/* Handwritten wireframe font */
+.font-wireframe-sketch {
+  font-family: 'Caveat', cursive;
+}
+
+.font-mono-code {
+  font-family: 'JetBrains Mono', monospace;
+}
